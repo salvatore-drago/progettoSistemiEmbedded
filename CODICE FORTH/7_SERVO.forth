@@ -1,6 +1,13 @@
+
+DECIMAL 
+
 50 CONSTANT APRI
 150 CONSTANT CHIUDI 
 
 
 \ ( STANZA APRI/CHIUDI -- )
-: FIREDOOR  ;
+: FIREDOOR SERVOS ROT AREAD DUP DUP DUP  12 = IF 12 4 ABILPIN PWMSET1 DROP DROP DROP PWMDAT1 ! ELSE  \ PWM0 IN ALT0 (100) 
+                                          18 = IF 18 2 ABILPIN PWMSET1 DROP DROP PWMDAT1 ! ELSE  \ PWM0 IN ALT5 (010)
+                                          13 = IF 13 4 ABILPIN PWMSET2 DROP PWMDAT2 ! ELSE  \ PWM1 IN ALT0 (100)
+                                          19 = IF 19 2 ABILPIN PWMSET2  PWMDAT2 ! ELSE  \ PWM1 IN ALT5 (010) 
+                                          THEN THEN THEN THEN   ;
