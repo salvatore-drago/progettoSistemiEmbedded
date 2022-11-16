@@ -122,16 +122,23 @@ OFFSETPI @ 00805000 + CONSTANT I2C2 \  dedicato all'interfaccia HDMI: NON UTILIZ
 18 CONSTANT DEL       \ data delay register DEFAULT
 1C CONSTANT CLKT      \ clock stretch timeout DEFAULT
 
-\( I2Cn REG_NAME -- REG  )
-: SELI2C @ SWAP @ + ;
+\( I2Cn REG_NAME -- REG  ) non serve perchè basta fare una somma di costanti 
+\: SELI2C SWAP @ + ;
+: SELI2C + ;
 
 
 \COMANDO DI UTILITA PER SETTARE UN VALORE IN UN REGISTRO
 \ ( VALORE REGISTRO -- )
-: ENABLE DUP @ ROT OR SWAP ! ;
+: ENABLE DUP @ ROT OR SWAP ! ; \ problema --> alla fine non fa lo store, lo stack è corretto 
+								\ provato con *1, e memorizza nel registro il valore 32768 
+								\ con *2 esegue correttamente OR tra 32768 e 32 = 32800 ma non fa lo store finale
+								\ provato anche manualmente a fare 32800 I2C1 C + ! , ma non viene eseguito lo store 
+
+
 
 DECIMAL
-
-1 15 LSHIFT I2C1 C SELI2C  ENABLE \ ABILITAZIONE BSC 
-\ 1 1 LSHIFT I2C1 S SEL12C ENABLE \ RESET 
-\1 5 LSHIFT 12C1 C SELI2C ENABLE \ CLEAR FIFO
+\ seconda versione senza SELI2C 
+\1 15 LSHIFT I2C1 C SELI2C  ENABLE 
+1 15 LSHIFT I2C1 C + ENABLE \ ABILITAZIONE BSC  	*1
+\ 1 1 LSHIFT I2C1 S SEL12C ENABLE \ RESET 			*2
+\1 5 LSHIFT I2C1 C SELI2C ENABLE \ CLEAR FIFO
