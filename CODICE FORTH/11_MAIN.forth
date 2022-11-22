@@ -22,6 +22,11 @@ CREATE TEMPERATURE NROOMS 1 - ALLOT ALIGN
                                     0 ROOM ! 
                                    -1 DISPLAY  
                                     1 COUNTER DECC REPEAT ;
+
+\SOSTITUISCE MOMENTANEAMENTE DISPLAY LED O HDMI
+\( STANZA -- )
+: DISPLAY . ;
+
 \( -- )
 : MAIN BEGIN 
         POWER
@@ -33,10 +38,10 @@ CREATE TEMPERATURE NROOMS 1 - ALLOT ALIGN
                                                                           ELSE
                                                                             II @ YELLOW SETCOLOR 
                                                                           THEN  
-                                                              II @ FIAMMA IF
-                                                                            II @ DUP OFF RING APRI FIREDOOR
-                                                                          ELSE
+                                                              II @ ISFIRE IF
                                                                             II @ DUP DUP RED SETCOLOR ON RING CHIUDI FIREDOOR
+                                                                          ELSE
+                                                                            II @ DUP OFF RING APRI FIREDOOR
                                                                           THEN
                                     \ VA VISUALIZZATO QUALCOSA NEL DISPLAY- SEMPRE STANZA 0 FINO A QUANDO NON VIENE CAMBIATO ATTRAVERSO IL BOTTONE   : DISPLAY;
                                     
