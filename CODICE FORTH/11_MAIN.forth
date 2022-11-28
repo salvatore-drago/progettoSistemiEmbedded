@@ -18,8 +18,8 @@ VARIABLE MAX_T
 CREATE HUMIDITY NROOMS 1 - ALLOT ALIGN
 CREATE TEMPERATURE NROOMS 1 - ALLOT ALIGN 
 
-\(---)
-: MSTORE ROOM @ DUP CHECKSUM IF HHUMIDITY @ HUMIDITY ROT ASTORE HTEMPERATURE @ TEMPERATURE ROT ASTORE ELSE THEN ;
+\( STANZA(II) --- )
+: MSTORE DUP CHECKSUM IF HHUMIDITY @ HUMIDITY ROT ASTORE HTEMPERATURE @ TEMPERATURE ROT ASTORE ELSE THEN ;
 
 HEX 
 
@@ -30,53 +30,50 @@ HEX
 \(---) 
 : ROOMDISPLAY STANZA SEND_CHAR PUNTI SEND_CHAR ROOM @ PRINTNUMBER SPACE SEND_CHAR  ;
 \(--- TEMPERATURA)
-: TEMPFETCH TEMPERATURE ROOM @ AREAD ;
+: TEMPFETCH TEMPERATURE II @ AREAD ;
 
 \(---)
-: TEMPDISPLAY GRADI SEND_CHAR PUNTI SEND_CHAR TEMPFETCH PRINTNUMBER SPACE SEND_CHAR  ;
+: TEMPDISPLAY GRADI SEND_CHAR PUNTI SEND_CHAR TEMPERATURE ROOM @ AREAD PRINTNUMBER SPACE SEND_CHAR  ;
 
 \(--- UMIDITA)
-: HUMFETCH HUMIDITY ROOM @ AREAD ;
+: HUMFETCH HUMIDITY II @ AREAD ;
 
 \(---)
-: HUMDISPLAY HUM SEND_CHAR PUNTI SEND_CHAR HUMFETCH PRINTNUMBER ;
+: HUMDISPLAY HUM SEND_CHAR PUNTI SEND_CHAR HUMIDITY ROOM @ AREAD PRINTNUMBER ;
 
 \(---)
 : DISPLAY ROOMDISPLAY TEMPDISPLAY HUMDISPLAY ;
 
+\(---)
 : SHOW DISPLAYCLEAR 1000 DELAY DISPLAY ;
 
 \(--- BOOL)
-: CHECK HUMFETCH DUP MIN_H > SWAP MAX_H < AND TEMPFETCH DUP MIN_T > SWAP MAX_T < AND AND IF -1 ELSE 0 THEN  ;
+: CHECK HUMFETCH DUP MIN_H > SWAP MAX_H < AND TEMPFETCH DUP MIN_T > SWAP MAX_T < AND AND ; \ DA VERIFICARE PASSO PASSO 
 
-: RESET INITC BEGIN COUNTER @ WHILE COUNTER @ WHITE SETCOLOR 
-                                    COUNTER @ OFF RING 
-                                    COUNTER @ APRI FIREDOOR 
-                                    0 ROOM ! 
-                                    SHOW  
-                                    1 COUNTER DECC REPEAT ;
+: RESET INITC LCDINIT BEGIN COUNTER @ WHILE COUNTER @ WHITE SETCOLOR 
+                                            COUNTER @ OFF RING 
+                                            COUNTER @ APRI FIREDOOR  
+                                            1 COUNTER DECC REPEAT 0 ROOM ! 0 II ! 0 POWER_FLAG ! SHOW ;
 
 \(---)
-: MAIN BEGIN 
-        POWER
-        POWER_FLAG @ IF 
-                        0 II ! BEGIN
-                                II @ NROOMS < WHILE \DOPO LA VERIFICA DI TEMP E UMIDITA VA FATTA QUELLA DEL SENSORE DI FIAMMA : FIAMMA;
-                                    II @ DUP RILEVAZIONE MSTORE CHECK IF 
-                                                                            II @ GREEN SETCOLOR
-                                                                          ELSE
-                                                                            II @ YELLOW SETCOLOR 
-                                                                          THEN  
-                                                              II @ ISFIRE IF
-                                                                            II @ DUP DUP RED SETCOLOR ON RING CHIUDI FIREDOOR
-                                                                          ELSE
-                                                                            II @ DUP OFF RING APRI FIREDOOR
-                                                                          THEN                                                                                                    
-                                CHANGEROOM SHOW \ SHOW è FATTO IN MODO CHE DA VA A LEGGERE HUMIDITY E TEMPERATURE DI ROOM E COMUNICHI CON IL DISPLAY, SE RICEVA -1 RESETTA LO SCHERMO
-                                
-                               REPEAT   
-                     ELSE
-
-                        RESET
-                     THEN
-       AGAIN ;
+: MAIN RESET BEGIN 
+              POWER
+              POWER_FLAG @ IF 
+                              0 II ! BEGIN
+                                      II @ NROOMS < WHILE
+                                          II @ DUP RILEVAZIONE MSTORE CHECK IF 
+                                                                              II @ GREEN SETCOLOR
+                                                                            ELSE
+                                                                              II @ YELLOW SETCOLOR 
+                                                                            THEN  
+                                                                II @ ISFIRE IF
+                                                                              II @ DUP DUP RED SETCOLOR ON RING CHIUDI FIREDOOR
+                                                                            ELSE
+                                                                              II @ DUP OFF RING APRI FIREDOOR
+                                                                            THEN                                                                                                    
+                                      CHANGEROOM IF SHOW ELSE THEN  
+                                      REPEAT  
+                            ELSE
+                                RESET
+                            THEN
+            AGAIN ;
