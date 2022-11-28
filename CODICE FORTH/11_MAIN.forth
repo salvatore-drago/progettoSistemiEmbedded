@@ -4,11 +4,11 @@ DECIMAL
 VARIABLE II 
 0 II !
 VARIABLE MIN_H
-55 MIN_H !
+40 MIN_H !
 VARIABLE MAX_H
 69 MAX_H !
 VARIABLE MIN_T
-18 MIN_T !
+10 MIN_T !
 VARIABLE MAX_T
 27 MAX_T !
 
@@ -53,7 +53,7 @@ HEX
                                     COUNTER @ OFF RING 
                                     COUNTER @ APRI FIREDOOR 
                                     0 ROOM ! 
-                                   -1 ROOM ! DISPLAY  
+                                    SHOW  
                                     1 COUNTER DECC REPEAT ;
 
 \(---)
@@ -62,7 +62,7 @@ HEX
         POWER_FLAG @ IF 
                         0 II ! BEGIN
                                 II @ NROOMS < WHILE \DOPO LA VERIFICA DI TEMP E UMIDITA VA FATTA QUELLA DEL SENSORE DI FIAMMA : FIAMMA;
-                                    II @ DUP DUP RILEVAZIONE MSTORE CHECK IF 
+                                    II @ DUP RILEVAZIONE MSTORE CHECK IF 
                                                                             II @ GREEN SETCOLOR
                                                                           ELSE
                                                                             II @ YELLOW SETCOLOR 
@@ -71,9 +71,7 @@ HEX
                                                                             II @ DUP DUP RED SETCOLOR ON RING CHIUDI FIREDOOR
                                                                           ELSE
                                                                             II @ DUP OFF RING APRI FIREDOOR
-                                                                          THEN
-                                    \ VA VISUALIZZATO QUALCOSA NEL DISPLAY- SEMPRE STANZA 0 FINO A QUANDO NON VIENE CAMBIATO ATTRAVERSO IL BOTTONE   : DISPLAY;
-                                    
+                                                                          THEN                                                                                                    
                                 CHANGEROOM SHOW \ SHOW è FATTO IN MODO CHE DA VA A LEGGERE HUMIDITY E TEMPERATURE DI ROOM E COMUNICHI CON IL DISPLAY, SE RICEVA -1 RESETTA LO SCHERMO
                                 
                                REPEAT   
