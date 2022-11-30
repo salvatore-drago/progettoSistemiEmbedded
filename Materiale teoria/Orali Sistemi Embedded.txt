@@ -1,0 +1,20 @@
+bus i2c e caratteristiche
+Come avviene la comunicazione
+Indirizzamento a 10 bit
+stretch nella sincronizzazione
+domande "pratiche" su tirare giù o su linee... 
+processori Dsp' 
+architettura harward
+buffer circolari
+ISP
+istruzioni assembly per ritornare subroutine
+Discorso generico sui sistemi embedded
+istruzione di somma in arm
+GPIO
+MIps?
+pipeline
+interlocks
+branch with link
+Arm data processing instructions e format
+hazard
+stack condition
