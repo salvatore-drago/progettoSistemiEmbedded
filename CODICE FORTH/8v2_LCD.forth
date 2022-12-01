@@ -7,8 +7,16 @@ P2 ENABLE
 P1 R/W' 0:R 1:W
 P0 RS
 
+VARIABLE TI4
+: INITTI4 TIMESTAMP TI4 ! ;
 
 \: CHANGEROOM TIMESTAMP TI4 @ - 5000000 >=  IF ROOM @ 1 + NROOMS MOD ROOM ! -1 INITTI4 ELSE 0 THEN ;
+
+\: RESET INITC LCDINIT BEGIN COUNTER @ WHILE 1 COUNTER DECC 
+                                            \COUNTER @ WHITE SETCOLOR 
+                                            \COUNTER @ OFF RING 
+                                            \COUNTER @ APRI FIREDOOR  
+                      \REPEAT -1 ROOM ! 0 II ! INITTI4  ; 
 
 \(---) 
 : MAINB RESET BEGIN 
