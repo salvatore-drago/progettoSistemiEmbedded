@@ -1,6 +1,9 @@
 
 DECIMAL
 
+VARIABLE TI4 \ VARIABILE PER VERIFICARE QUANTO TEMPO E' TRASCORSO DALL'ULTIMO CAMBIAMENTO NEL DISPLAY LED
+: INITTI4 TIMESTAMP TI4 ! ;
+
 
 VARIABLE ROOM \ STANZA SELEZIONATA 
 
@@ -66,6 +69,7 @@ CREATE TEMPERATURE NROOMS 1 - ALLOT ALIGN \ ARRAY DOVE VENGONO SALVATI I VALORI 
 
 \PAROLA CHE MODIFICA IL VALORE DI ROOM ( LA STANZA DI CUI VERRANO MOSTRATE LE INFORMAZIONI SUL DISPLAY LCD) 
 \ ( -- )
+\: CHANGEROOM TIMESTAMP TI4 @ - 3000000 >=  IF ROOM @ 1 + NROOMS MOD ROOM ! -1 INITTI4 ELSE 0 THEN ;
 : CHANGEROOM ROOM @ 1 + NROOMS MOD ROOM ! ;
 
 \ PAROLA CHE INIZIALIZZA LE VARIABILI DEL SISTEMA E IL DISPLAY LCD
@@ -74,7 +78,7 @@ CREATE TEMPERATURE NROOMS 1 - ALLOT ALIGN \ ARRAY DOVE VENGONO SALVATI I VALORI 
                                             COUNTER @ WHITE SETCOLOR 
                                             COUNTER @ OFF RING 
                                             COUNTER @ APRI FIREDOOR  
-                      REPEAT -1 ROOM ! 0 II ! ; 
+                      REPEAT -1 ROOM ! 0 II ! INITTI4 ; 
                               
                                             
 \(---) 
@@ -91,9 +95,9 @@ CREATE TEMPERATURE NROOMS 1 - ALLOT ALIGN \ ARRAY DOVE VENGONO SALVATI I VALORI 
                                                               ELSE
                                                                 II @ DUP OFF RING APRI FIREDOOR
                                                               THEN
-                                                                1 II ADDC 1500000 DELAY                                                                                                 
+                                                                1 II ADDC 1500000 DELAY CHANGEROOM IF SHOW ELSE THEN                                                                                                 
                       REPEAT 
-                CHANGEROOM SHOW            
+                            
               AGAIN ;
 
 
